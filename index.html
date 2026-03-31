@@ -46,7 +46,7 @@
         // FULL INVENTORY IMPORTED DIRECTLY FROM EXCEL SHEETS
         const INVENTORY = {
             "Fruits and Vegetables": [
-                "Apple (सेव)", "Asparagus (ऐस्पैरागस)", "Avocado (अवोकेडो)", "Banana (केले)", "Basil (बेसिल)", "Beans (बीन्स)", "Beetroot (चुकंदर)", "Broccoli (ब्रोकली)", "Cabbage (पत्ता गोभी)", "Green Capsicum (शिमला मिर्च)", "Capsicum Red & Yellow (लाल व पीली शिमला मिर्च)", "Carrot (गाजर)", "Cauliflower (फूलगोभी)", "Cellary (सैलरी)", "Cherry Tomato (चेरी टोमेटो)", "Cucumber (खीरा)", "Garlic (लहसुन) (Peeled)", "Ginger (अदरक)", "Green Chilli (हरी मिर्च)", "G4 (small हरी मिर्च)", "Green Lollo Rosso Lettuce", "Iceberg Lettuce", "Kaffir Lime", "Lemon (नींबू)", "Mint (पुदीना)", "Mango (तोतापुरी आम)", "Mushroom (मशरुम)", "Onion (प्याज़) (Big)", "Orange (माल्टा)", "Parsley (पार्स्ली)", "Pineapple (पाइनएप्पल)", "Pokchoy (पोकचॉय)", "Potato (आलू)", "Pumpkin (Big) (बड़ा कदु)", "Red Lollo Rosso Lettuce", "Red Cabbage (लाल पत्तागोभी)", "Spinach (पालक)", "Spring onion (प्याज पुली)", "Strawberry (स्ट्रॉबेरी)", "Thyme (थाइम)", "Tomato (टमाटर) (Grevy)", "Watermelon (तरबूज़)(large)", "Zucchini (ज़ुच्चिनी)(Green & Yellow)", "Pomegranate (अनार)", "Coriander (धनिया)", "Brinjal (बैंगन) (Big)", "Ladyfingers (भिंडी)", "लौकी", "टिण्डा", "काचरी", "ग्वार फली"
+                "Apple (सेव)", "Asparagus (ऐस्पैरागस)", "Avocado (अवोकेडो)", "Banana (केले)", "Basil (बेसिल)", "Beans (बीन्स)", "Beetroot (चुकंदर)", "Broccoli (ब्रोकली)", "Cabbage (पत्ता गोभी)", "Green Capsicum (शिमला मिर्च)", "Capsicum Red & Yellow (लाल व पीली शिमला मिर्च)", "Carrot (गाजर)", "Cauliflower (फूलगोभी)", "Cellary (सैलरी)", "Cherry Tomato (चेरी टोमेटो)", "Cucumber (खीरा)", "Garlic (लहसुन) (Peeled)", "Ginger (अदरक)", "Green Chilli (हरी मिर्च)", "G4 (small हरी मिर्च)", "Green Lollo Rosso Lettuce", "Iceberg Lettuce", "Kaffir Lime", "Lemon (नींबू)", "Mint (पुदीना)", "Mango (तोतापुरी आम)", "Mushroom (मशरुम)", "Onion (प्याज़) (Big)", "Orange (माल्टा)", "Parsley (पार्स्ली)", "Pineapple (पाइनएप्पल)", "Pokchoy (पोकचॉय)", "Potato (आलू)", "Pumpkin (Big) (बड़ा कदु)", "Red Lollo Rosso Lettuce", "Red Cabbage (लाल पत्तागोभी)", "Spinach (पालक)", "Spring onion ( प्याज पुली)", "Strawberry (स्ट्रॉबेरी)", "Thyme (थाइम)", "Tomato (टमाटर) (Grevy)", "Watermelon (तरबूज़)(large)", "Zucchini (ज़ुच्चिनी)(Green & Yellow)", "Pomegranate (अनार)", "Coriander (धनिया)", "Brinjal (बैंगन) (Big)", "Ladyfingers (भिंडी)", "लौकी", "टिण्डा", "काचरी", "ग्वार फली"
             ],
             "Coffee and Matcha": [
                 "Full House Green (Arabica Coffee) (Dark Roast)", "Baarbara Green (Cold Brew)", "Matcha (Premium Grade)"
@@ -102,7 +102,7 @@
             const submitDraftPO = (items) => {
                 const newPo = {
                     id: generatePONumber(), 
-                    supplier: null, // Staff no longer selects supplier
+                    supplier: null, 
                     supplierPhone: null,
                     items, 
                     status: 'Pending',
@@ -168,9 +168,8 @@
                 
                 let url = `https://wa.me/`;
                 if (po.supplierPhone) {
-                    // Strip any dashes or spaces and append to URL
                     let phoneStr = po.supplierPhone.replace(/\D/g, '');
-                    if (phoneStr.length === 10) phoneStr = '91' + phoneStr; // Add India country code if exactly 10 digits
+                    if (phoneStr.length === 10) phoneStr = '91' + phoneStr; 
                     url += `${phoneStr}?text=${encodeURIComponent(message)}`;
                 } else {
                     url += `?text=${encodeURIComponent(message)}`;
@@ -190,7 +189,7 @@
             const handleSwitchRole = () => {
                 if (role === 'staff') {
                     const pin = window.prompt("Enter Owner PIN to access dashboard:");
-                    if (pin === "1701") { 
+                    if (pin === "1234") { 
                         setRole('owner');
                     } else if (pin !== null) {
                         alert("Incorrect PIN. Access Denied.");
@@ -228,14 +227,31 @@
             const [receivingPO, setReceivingPO] = useState(null);
             const [receivedQuantities, setReceivedQuantities] = useState({});
 
-            const addItem = (item) => { if (!cart.find(i => i.name === item)) setCart([...cart, { name: item, qty: 1, unit: 'Kg' }]); };
-            const updateQty = (index, delta) => { const newCart = [...cart]; newCart[index].qty = Math.max(1, newCart[index].qty + delta); setCart(newCart); };
+            const addItem = (item) => { 
+                if (!cart.find(i => i.name === item)) {
+                    // Defaulting to 1 to save an extra click, but it can be immediately edited
+                    setCart([...cart, { name: item, qty: 1, unit: 'Kg' }]); 
+                }
+            };
+
+            // NEW: Updated to handle direct text/number input instead of plus/minus
+            const updateQty = (index, value) => { 
+                const newCart = [...cart]; 
+                newCart[index].qty = value; 
+                setCart(newCart); 
+            };
+            
             const updateUnit = (index, unit) => { const newCart = [...cart]; newCart[index].unit = unit; setCart(newCart); };
             const removeItem = (index) => setCart(cart.filter((_, i) => i !== index));
 
             const handleSubmit = () => {
                 if (cart.length === 0) return alert('Cart is empty.');
-                onSubmit(cart); // NO SUPPLIER REQUIRED NOW
+                
+                // Optional: Validate that all quantities are properly filled out
+                const hasEmptyQty = cart.some(item => item.qty === '' || item.qty <= 0);
+                if(hasEmptyQty) return alert('Please enter a valid quantity for all items.');
+
+                onSubmit(cart); 
                 setCart([]); setSearchTerm('');
             };
 
@@ -247,13 +263,13 @@
             };
 
             const updateReceivedQty = (idx, value) => {
-                setReceivedQuantities({ ...receivedQuantities, [idx]: Number(value) });
+                setReceivedQuantities({ ...receivedQuantities, [idx]: value });
             };
 
             const submitReceive = () => {
                 const receivedItemsData = receivingPO.items.map((item, idx) => ({
                     ...item,
-                    receivedQty: receivedQuantities[idx]
+                    receivedQty: Number(receivedQuantities[idx]) || 0
                 }));
                 onReceive(receivingPO.id, receivedItemsData);
                 setReceivingPO(null);
@@ -293,7 +309,8 @@
                                         <input 
                                             type="number" 
                                             min="0"
-                                            className="w-16 border border-hunter rounded p-1 text-center font-bold"
+                                            step="any"
+                                            className="w-16 border border-hunter rounded p-1 text-center font-bold focus:outline-none focus:ring-2 focus:ring-antiqueGold"
                                             value={receivedQuantities[idx]}
                                             onChange={(e) => updateReceivedQty(idx, e.target.value)}
                                         />
@@ -334,7 +351,7 @@
                     
                     <div className="relative mb-4 shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span className="text-gray-400">🔍</span></div>
-                        <input type="text" className="w-full pl-10 p-3 border border-hunter bg-white rounded" placeholder="Search ingredients, items..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+                        <input type="text" className="w-full pl-10 p-3 border border-hunter bg-white rounded focus:outline-none focus:ring-2 focus:ring-antiqueGold" placeholder="Search ingredients, items..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                     </div>
 
                     {!searchTerm && (
@@ -365,15 +382,22 @@
                                 <div key={idx} className="flex flex-col mb-3 bg-white/10 p-2 rounded">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-sm font-semibold">{item.name}</span>
-                                        <button onClick={() => removeItem(idx)} className="text-red-300 text-xs">✕</button>
+                                        <button onClick={() => removeItem(idx)} className="text-red-300 text-xs hover:text-red-500">✕ Remove</button>
                                     </div>
                                     <div className="flex items-center space-x-3">
-                                        <div className="flex items-center bg-white text-hunter rounded overflow-hidden shadow-sm">
-                                            <button onClick={() => updateQty(idx, -1)} className="px-3 py-1 bg-gray-200 hover:bg-gray-300">-</button>
-                                            <span className="px-3 py-1 font-bold w-12 text-center">{item.qty}</span>
-                                            <button onClick={() => updateQty(idx, 1)} className="px-3 py-1 bg-gray-200 hover:bg-gray-300">+</button>
-                                        </div>
-                                        <select className="text-hunter bg-white p-1 rounded w-24 text-sm shadow-sm" value={item.unit} onChange={(e) => updateUnit(idx, e.target.value)}>
+                                        
+                                        {/* NEW: Manual Number Input Field */}
+                                        <input 
+                                            type="number" 
+                                            min="0"
+                                            step="any"
+                                            placeholder="Qty"
+                                            className="w-20 border border-transparent rounded p-2 text-center font-bold text-hunter shadow-sm focus:outline-none focus:ring-2 focus:ring-antiqueGold"
+                                            value={item.qty}
+                                            onChange={(e) => updateQty(idx, e.target.value)}
+                                        />
+
+                                        <select className="text-hunter bg-white p-2 border border-transparent rounded w-28 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-antiqueGold" value={item.unit} onChange={(e) => updateUnit(idx, e.target.value)}>
                                             {units.map(u => <option key={u} value={u}>{u}</option>)}
                                         </select>
                                     </div>
@@ -410,7 +434,6 @@
             const pendingPOs = pos.filter(po => po.status === 'Pending');
             const historyPOs = pos.filter(po => po.status !== 'Pending');
 
-            // Track supplier selections for pending POs
             const [selectedSuppliers, setSelectedSuppliers] = useState({});
 
             const handleSupplierChange = (poId, supplierName) => {
@@ -430,12 +453,11 @@
                 <div className="animate-fade-in">
                     <h2 className="text-xl font-serif font-semibold border-b-2 border-hunter pb-2 mb-4">Owner Dashboard</h2>
                     
-                    {/* NEW SECTION: Vendor Management */}
                     <div className="mb-6 bg-white p-4 rounded-lg shadow-md border border-gray-200">
                         <div className="flex justify-between items-center mb-2">
                             <h3 className="font-bold text-hunter text-sm uppercase tracking-widest">Manage Directory</h3>
                             <button onClick={addSupplier} className="bg-antiqueGold text-hunter text-xs font-bold py-1 px-3 rounded shadow-sm hover:bg-yellow-500 transition">
-                                + Add New Vendor
+                                + Add Vendor
                             </button>
                         </div>
                         <p className="text-xs text-gray-500">Currently {suppliers.length} vendors attached with contact details.</p>
@@ -452,7 +474,6 @@
                                         <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Pending</span>
                                     </div>
                                     
-                                    {/* NEW: Owner selects the vendor here */}
                                     <div className="mb-3 bg-yellow-50 p-2 rounded border border-yellow-200">
                                         <label className="block text-xs font-bold text-yellow-800 mb-1">Assign Vendor for this Order:</label>
                                         <select 
